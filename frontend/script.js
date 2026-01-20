@@ -39,37 +39,21 @@ async function register() {
   showMessage(data.message || data.error, !res.ok);
 }
 
-async function buscarCep() {
+function buscarCep() {
   const cep = document.getElementById("cep").value;
-  const token = localStorage.getItem("token");
 
-  if (!cep || cep.length !== 8) {
-    showMessage("CEP inválido", true);
-    return;
-  }
+  fetch(`http://127.0.0.1:5000/cep?cep=${cep}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.erro) {
+        alert(data.erro);
+        return;
+      }
 
-  showMessage("Buscando CEP...");
-
-  const res = await fetch(`${API}/cep/${cep}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    showMessage(data.error, true);
-    return;
-  }
-
-  document.getElementById("resultado").classList.remove("d-none");
-  document.getElementById("logradouro").innerText = data.logradouro;
-  document.getElementById("bairro").innerText = data.bairro;
-  document.getElementById("cidade").innerText = data.localidade;
-  document.getElementById("estado").innerText = data.uf;
-
-  hideMessage();
+      document.getElementById("rua").value = data.logradouro;
+      document.getElementById("cidade").value = data.cidade;
+      document.getElementById("estado").value = data.estado;
+    });
 }
 
 function showMessage(msg, error = false) {
