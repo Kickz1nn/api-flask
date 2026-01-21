@@ -1,21 +1,24 @@
 import requests
+from app.models.cep_history_model import CepHistory
+from app.models.user_model import db
 
-def consultar_cep(cep):
-    cep = cep.replace("-", "").strip()
+def consultar_cep(cep, user_id):
+    response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
+    data = response.json()
 
-    if len(cep) != 8 or not cep.isdigit():
-        return {"erro": "CEP inválido"}, 400
-    
-    viacep_url = "https://viacep.com.br/ws/{cep}/json/"
+    if "erro" in data:
+        return {"error": "CEP não encontrado"}, 404
 
-    try:
-        response = requests.get(viacep_url.format(cep=cep), timeout=5)
-        data = response.json()
+    history = CepHistory(
+        user_id=user_id,
+        cep=data["cep"].replace("-", ""),
+        logradouro=data.get("logradouro"),
+        bairro=data.get("bairro"),
+        cidade=data.get("localidade"),
+        uf=data.get("uf")
+    )
 
-        if "erro" in data:
-            return {"erro": "CEP não encontrado"}, 404
-        
-        return data, 200
-    
-    except requests.exceptions.RequestException:
-        return {"erro": "Erro ao conectar com o ViaCEP"}, 500
+    db.session.add(history)
+    db.session.commit()
+
+    return data, 200

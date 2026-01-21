@@ -4,6 +4,7 @@ from app.models.user_model import db
 
 from app.routes.auth_routes import auth_bp
 from app.routes.cep_routes import cep_bp
+from app.routes.history_routes import history_bp
 
 def create_app():
     app = Flask(__name__)
@@ -19,7 +20,8 @@ def create_app():
         db.create_all()
 
     app.register_blueprint(auth_bp, url_prefix="/auth")
-    app.register_blueprint(cep_bp, url_prefix="/cep")
+    app.register_blueprint(cep_bp)
+    app.register_blueprint(history_bp)
 
     return app
 
