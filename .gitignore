@@ -13,3 +13,6 @@ instance/
 
 .DS_Store
 Thumbs.db
+
+
+*.db

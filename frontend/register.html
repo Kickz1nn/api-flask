@@ -20,7 +20,7 @@
 
               <input id="nome" class="form-control mb-2" placeholder="Nome" />
 
-              <input id="email" class="form-control mb-2" placeholder="Email" />
+              <input id="email" type="email" class="form-control mb-2" placeholder="Email" />
 
               <input
                 id="senha"
@@ -29,7 +29,7 @@
                 placeholder="Senha"
               />
 
-              <button class="btn btn-primary w-100" onclick="register()">
+              <button id="registerBtn" class="btn btn-primary w-100" onclick="register()">
                 Cadastrar
               </button>
 
@@ -48,7 +48,11 @@
         </div>
       </div>
     </div>
-
+    <script>
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") register(); 
+      })
+    </script>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>

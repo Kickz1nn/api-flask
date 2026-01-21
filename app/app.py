@@ -1,17 +1,25 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
-from routes.cep_routes import cep_bp
+from app.models.user_model import db
+
+from app.routes.auth_routes import auth_bp
+from app.routes.cep_routes import cep_bp
 
 def create_app():
     app = Flask(__name__)
 
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
     CORS(app)
 
-    app.register_blueprint(cep_bp)
+    db.init_app(app)
 
-    @app.route("/")
-    def home():
-        return jsonify({"status": "API running"})
+    with app.app_context():
+        db.create_all()
+
+    app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(cep_bp, url_prefix="/cep")
 
     return app
 

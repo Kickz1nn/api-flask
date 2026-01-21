@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from services.cep_service import consultar_cep
+from app.services.cep_service import consultar_cep
 
 cep_bp = Blueprint("cep", __name__)
 
