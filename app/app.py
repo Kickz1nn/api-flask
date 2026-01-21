@@ -1,8 +1,11 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from routes.cep_routes import cep_bp
 
 def create_app():
     app = Flask(__name__)
+
+    CORS(app)
 
     app.register_blueprint(cep_bp)
 

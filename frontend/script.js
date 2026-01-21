@@ -1,69 +1,41 @@
 const API = "http://127.0.0.1:5000";
 
-async function login() {
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
-
-  showMessage("Carregando...");
-
-  const res = await fetch(`${API}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, senha })
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    localStorage.setItem("token", data.access_token);
-    window.location.href = "cep.html";
-  } else {
-    showMessage(data.error, true);
-  }
-}
-
-async function register() {
-  const nome = document.getElementById("nome").value;
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
-
-  showMessage("Cadastrando...");
-
-  const res = await fetch(`${API}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, email, senha })
-  });
-
-  const data = await res.json();
-  showMessage(data.message || data.error, !res.ok);
-}
-
-function buscarCep() {
+async function buscarCEP() {
   const cep = document.getElementById("cep").value;
 
-  fetch(`http://127.0.0.1:5000/cep?cep=${cep}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.erro) {
-        alert(data.erro);
-        return;
-      }
+  const loading = document.getElementById("loading");
+  const error = document.getElementById("error");
 
-      document.getElementById("rua").value = data.logradouro;
-      document.getElementById("cidade").value = data.cidade;
-      document.getElementById("estado").value = data.estado;
-    });
-}
+  const cepResult = document.getElementById("cepResult");
+  const logradouro = document.getElementById("logradouro");
+  const bairro = document.getElementById("bairro");
+  const cidade = document.getElementById("cidade");
+  const uf = document.getElementById("uf");
 
-function showMessage(msg, error = false) {
-  const el = document.getElementById("message");
-  el.classList.remove("d-none", "alert-success", "alert-danger");
-  el.classList.add(error ? "alert-danger" : "alert-success");
-  el.innerText = msg;
-}
+  error.classList.add("d-none");
+  loading.classList.remove("d-none");
 
-function hideMessage() {
-  const el = document.getElementById("message");
-  el.classList.add("d-none");
+  try {
+    const res = await fetch(`${API}/cep/${cep}`);
+    const data = await res.json();
+
+    loading.classList.add("d-none");
+
+    if (!res.ok) {
+      error.innerText = data.error;
+      error.classList.remove("d-none");
+      return;
+    }
+
+    cepResult.value = data.cep;
+    logradouro.value = data.logradouro;
+    bairro.value = data.bairro;
+    cidade.value = data.localidade;
+    uf.value = data.uf;
+
+  } catch {
+    loading.classList.add("d-none");
+    error.innerText = "Erro ao conectar com a API";
+    error.classList.remove("d-none");
+  }
 }

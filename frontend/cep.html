@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="pt-br">
   <head>
     <meta charset="utf-8" />
     <title>Consulta CEP</title>
@@ -9,11 +9,10 @@
       rel="stylesheet"
     />
   </head>
-
   <body>
     <div class="container mt-5">
       <div class="row justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="card shadow">
             <div class="card-body">
               <h4 class="text-center mb-3">Consulta de CEP</h4>
@@ -22,39 +21,25 @@
                 id="cep"
                 class="form-control mb-3"
                 placeholder="Digite o CEP"
-                maxlength="9"
               />
 
-              <button class="btn btn-primary w-100" onclick="buscarCep()">
+              <button class="btn btn-primary w-100" onclick="buscarCEP()">
                 Buscar
               </button>
 
-              <div id="resultado" class="mt-4 d-none">
-                <div class="mb-2">
-                  <strong>Logradouro:</strong>
-                  <span id="logradouro"></span>
-                </div>
-                <div class="mb-2">
-                  <strong>Bairro:</strong>
-                  <span id="bairro"></span>
-                </div>
-                <div class="mb-2">
-                  <strong>Cidade:</strong>
-                  <span id="cidade"></span>
-                </div>
-                <div class="mb-2">
-                  <strong>Estado:</strong>
-                  <span id="estado"></span>
-                </div>
+              <div class="mb-3">
+                <input id="cepResult" class="form-control mb-2" placeholder="CEP" readonly />
+                <input id="logradouro" class="form-control mb-2" placeholder="Logradouro" readonly />
+                <input id="bairro" class="form-control mb-2" placeholder="Bairro" readonly />
+                <input id="cidade" class="form-control mb-2" placeholder="Cidade" readonly />
+                <input id="uf" class="form-control" placeholder="UF" readonly />
               </div>
 
-              <div id="message" class="alert mt-3 d-none"></div>
-
-              <div class="text-center mt-3">
-                <a href="index.html" class="link-primary fw-semibold">
-                  Voltar ao login
-                </a>
+              <div id="loading" class="text-center d-none">
+                <div class="spinner-border text-primary" role="status"></div>
               </div>
+
+              <div id="error" class="alert alert-danger mt-3 d-none"></div>
             </div>
           </div>
         </div>
@@ -62,6 +47,5 @@
     </div>
 
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
